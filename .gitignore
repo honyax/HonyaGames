@@ -58,3 +58,8 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+HonyaBlackJack/Assets/Playing Cards/
+HonyaBlackJack/Library/
+HonyaBlackJack/Logs/
+HonyaBlackJack/obj/
+HonyaBlackJack/Temp/
