@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/0_HonyanCraft/Scenes/TPS.unity
+    path: Assets/0_HonyanCraft/Scenes/Game.unity
     guid: f287a6a4726e86848a59a6e2be4b7ccb
   m_configObjects: {}

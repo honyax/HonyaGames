@@ -1,21 +1,11 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.InputSystem;
 
 public class HonyanChan : MonoBehaviourPun
 {
-    [SerializeField]
-    private GameObject[] _blockPrefabs;
-
-    static private Dictionary<Tuple<int, int, int>, GameObject> _blockDict = new Dictionary<Tuple<int, int, int>, GameObject>();
-
-    private int _blockPrefabIndex = 0;
     private Transform _mainCamera;
     private Transform _crosshair;
-    private Transform _sample;
-    private GameObject _sampleBlock;
     private int _blockLayer;
     private int _hitLayerMask;
 
@@ -23,13 +13,10 @@ public class HonyanChan : MonoBehaviourPun
     {
         _mainCamera = Camera.main.transform;
         _crosshair = _mainCamera.Find("crosshair");
-        _sample = _mainCamera.Find("sample");
         var floorLayerIndex = LayerMask.NameToLayer("Floor");
         var blockLayerIndex = LayerMask.NameToLayer("Block");
         _hitLayerMask = (1 << floorLayerIndex) | (1 << blockLayerIndex);
         _blockLayer = blockLayerIndex;
-
-        ReplaceSample(_blockPrefabIndex);
     }
 
     void Update()
@@ -75,7 +62,7 @@ public class HonyanChan : MonoBehaviourPun
                 blockPosY = (int)pointY;
                 Debug.Log($"Block no hit pos:{pos} => {blockPosX}, {blockPosY}, {blockPosZ}");
             }
-            photonView.RPC(nameof(CreateBlock), RpcTarget.All, blockPosX, blockPosY, blockPosZ, _blockPrefabIndex);
+            Game.Instance.CreateBlock(blockPosX, blockPosY, blockPosZ);
         }
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
@@ -88,7 +75,7 @@ public class HonyanChan : MonoBehaviourPun
                     var blockPosZ = (int)t.position.z;
                     var blockPosY = (int)(t.position.y - 0.5f);
                     Debug.Log($"Block hit point:{hit.point} => {blockPosX}, {blockPosY}, {blockPosZ}");
-                    photonView.RPC(nameof(DeleteBlock), RpcTarget.All, blockPosX, blockPosY, blockPosZ);
+                    Game.Instance.DeleteBlock(blockPosX, blockPosY, blockPosZ);
                 }
             }
 
@@ -96,70 +83,11 @@ public class HonyanChan : MonoBehaviourPun
 
         if (Keyboard.current.zKey.wasPressedThisFrame)
         {
-            if (_blockPrefabIndex > 0)
-            {
-                _blockPrefabIndex--;
-                ReplaceSample(_blockPrefabIndex);
-            }
+            Game.Instance.DecrementBlockIndex();
         }
         if (Keyboard.current.xKey.wasPressedThisFrame)
         {
-            if (_blockPrefabIndex < _blockPrefabs.Length - 1)
-            {
-                _blockPrefabIndex++;
-                ReplaceSample(_blockPrefabIndex);
-            }
-        }
-    }
-
-    private void ReplaceSample(int blockPrefabIndex)
-    {
-        if (0 <= blockPrefabIndex && blockPrefabIndex < _blockPrefabs.Length)
-        {
-            if (_sampleBlock != null)
-            {
-                Destroy(_sampleBlock);
-            }
-
-            var blockObj = Instantiate(_blockPrefabs[blockPrefabIndex], _sample);
-            var t = blockObj.transform;
-            t.localPosition = Vector3.zero;
-            t.localRotation = Quaternion.identity;
-            t.localScale = Vector3.one;
-            _sampleBlock = blockObj;
-        }
-    }
-
-    [PunRPC]
-    private void CreateBlock(int blockPosX, int blockPosY, int blockPosZ, int blockPrefabIndex, PhotonMessageInfo info)
-    {
-        Debug.Log($"CreateBlock {info.Sender.NickName}: ({blockPosX}, {blockPosY}, {blockPosZ})");
-        var tuple = Tuple.Create(blockPosX, blockPosY, blockPosZ);
-
-        if (!_blockDict.ContainsKey(tuple))
-        {
-            if (0 <= blockPrefabIndex && blockPrefabIndex < _blockPrefabs.Length)
-            {
-                var blockObj = Instantiate(_blockPrefabs[blockPrefabIndex], Vector3.zero, Quaternion.identity);
-                var blockPos = new Vector3(blockPosX, blockPosY + 0.5f, blockPosZ) ;
-                blockObj.transform.position = blockPos;
-                blockObj.layer = _blockLayer;
-                _blockDict[tuple] = blockObj;
-            }
-        }
-    }
-
-    [PunRPC]
-    private void DeleteBlock(int blockPosX, int blockPosY, int blockPosZ, PhotonMessageInfo info)
-    {
-        Debug.Log($"DeleteBlock {info.Sender.NickName}: ({blockPosX}, {blockPosY}, {blockPosZ})");
-        var tuple = Tuple.Create(blockPosX, blockPosY, blockPosZ);
-
-        GameObject blockObj;
-        if (_blockDict.TryGetValue(tuple, out blockObj))
-        {
-            Destroy(blockObj);
-            _blockDict.Remove(tuple);
+            Game.Instance.IncrementBlockIndex();
         }
     }
 }
