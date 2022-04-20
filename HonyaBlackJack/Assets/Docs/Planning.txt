@@ -10,3 +10,20 @@
 　★勝負、Win or Lose
 
 ★見た目部分の制作
+
+■撮影用
+
+★プロジェクト作成
+★Gameシーン作成
+★Table作成
+★Scriptsフォルダ作成
+★Game、SelfPlayer、EnemyPlayerの各オブジェクト＆スクリプト作成、BasePlayerスクリプト作成
+★CUI版BlackJack作成
+★SelfPlayerにOnHitButton, OnStandButton関数作成
+★Hit, Standボタン作成
+★プレイヤーターン時にHitでカードを一枚配布
+★プレイヤーターン時にStandでエネミーターンに遷移
+★エネミーターンで16未満の時ヒット
+★リザルト
+★ドボンしたときに自動的に終了する
+★勝敗結果の表示
