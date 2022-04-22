@@ -11,9 +11,9 @@ public class Tetrimino
     {
     }
 
-    public void Initialize()
+    public void Initialize(Game.BlockType blockType)
     {
-        BlockType = Game.BlockType.TetriminoI;
+        BlockType = blockType;
         _basePosition = new Vector2Int(0, 0);
     }
 
@@ -27,18 +27,8 @@ public class Tetrimino
         };
     }
 
-    public void MoveDown()
+    public void Move(int deltaX, int deltaY)
     {
-        _basePosition.Set(_basePosition.x, _basePosition.y + 1);
-    }
-
-    public void MoveLeft()
-    {
-        _basePosition.Set(_basePosition.x - 1, _basePosition.y);
-    }
-
-    public void MoveRight()
-    {
-        _basePosition.Set(_basePosition.x + 1, _basePosition.y);
+        _basePosition.Set(_basePosition.x + deltaX, _basePosition.y + deltaY);
     }
 }

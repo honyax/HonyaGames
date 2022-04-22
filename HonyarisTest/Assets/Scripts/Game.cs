@@ -19,13 +19,14 @@ public class Game : MonoBehaviour
     private Tetrimino _tetrimino = new Tetrimino();
     private float _fallInterval;
     private DateTime _lastFallTime;
+    private DateTime _lastControlTime;
 
     private BlockType[,] _fieldBlocks;
 
     public enum BlockType
     {
-        None,
-        TetriminoI,
+        None = 0,
+        TetriminoI = 1,
     }
 
     private void Start()
@@ -54,9 +55,10 @@ public class Game : MonoBehaviour
 
     private void Initialize()
     {
-        _tetrimino.Initialize();
+        _tetrimino.Initialize(BlockType.TetriminoI);
         _fallInterval = 0.3f;
         _lastFallTime = DateTime.UtcNow;
+        _lastControlTime = DateTime.UtcNow;
 
         _fieldBlocks = new BlockType[FieldXLength, FieldYLength];
         for (var y = 0; y < FieldYLength; y++)
@@ -70,20 +72,88 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
+        var controlled = ControlTetrimino();
+
         var now = DateTime.UtcNow;
         if ((now - _lastFallTime).TotalSeconds < _fallInterval)
-            return;
+        {
+            if (!controlled)
+                return;
+        }
+        else
+        {
+            _lastFallTime = now;
 
-        _lastFallTime = now;
-
-        FallTetrimino();
+            if (!TryMoveTetrimino(0, 1))
+            {
+                // TODO: FIX TETRIMINO AND NEXT
+            }
+        }
 
         Draw();
     }
 
-    private void FallTetrimino()
+    private bool ControlTetrimino()
     {
-        _tetrimino.MoveDown();
+        var now = DateTime.UtcNow;
+        if ((now - _lastControlTime).TotalSeconds < 0.1f)
+            return false;
+
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        {
+            if (TryMoveTetrimino(-1, 0))
+            {
+                _lastControlTime = now;
+                return true;
+            }
+        }
+        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        {
+            if (TryMoveTetrimino(1, 0))
+            {
+                _lastControlTime = now;
+                return true;
+            }
+        }
+        else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+        {
+            if (TryMoveTetrimino(0, 1))
+            {
+                _lastControlTime = now;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool TryMoveTetrimino(int deltaX, int deltaY)
+    {
+        if (CanMoveTetrimino(deltaX, deltaY))
+        {
+            _tetrimino.Move(deltaX, deltaY);
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool CanMoveTetrimino(int deltaX, int deltaY)
+    {
+        var blockPositions = _tetrimino.GetBlockPositions();
+        foreach (var blockPosition in blockPositions)
+        {
+            var x = blockPosition.x + deltaX;
+            var y = blockPosition.y + deltaY;
+            if (x < 0 || x >= FieldXLength)
+                return false;
+            if (y < 0 || y >= FieldYLength)
+                return false;
+            if (_fieldBlocks[x, y] != BlockType.None)
+                return false;
+        }
+
+        return true;
     }
 
     private void Draw()
