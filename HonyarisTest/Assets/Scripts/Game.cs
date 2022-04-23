@@ -114,6 +114,7 @@ public class Game : MonoBehaviour
                 {
                     _fieldBlocks[position.x, position.y] = _tetrimino.BlockType;
                 }
+                DeleteLines();
 
                 _tetrimino.Initialize(_nextTetrimino.BlockType);
                 _nextTetrimino.Initialize(BlockType.TetriminoI);
@@ -121,6 +122,35 @@ public class Game : MonoBehaviour
         }
 
         Draw();
+    }
+
+    private void DeleteLines()
+    {
+        for (var y = FieldYLength - 1; y >= 0; )
+        {
+            var hasBlank = false;
+            for (var x = 0; x < FieldXLength; x++)
+            {
+                if (_fieldBlocks[x, y] == BlockType.None)
+                {
+                    hasBlank = true;
+                    break;
+                }
+            }
+            if (hasBlank)
+            {
+                y--;
+                continue;
+            }
+
+            for (var downY = y; downY >= 0; downY--)
+            {
+                for (var x = 0; x < FieldXLength; x++)
+                {
+                    _fieldBlocks[x, downY] = downY == 0 ? BlockType.None : _fieldBlocks[x, downY - 1];
+                }
+            }
+        }
     }
 
     private bool ControlTetrimino()
