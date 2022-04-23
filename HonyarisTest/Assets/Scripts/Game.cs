@@ -34,6 +34,12 @@ public class Game : MonoBehaviour
     {
         None = 0,
         TetriminoI = 1,
+        TetriminoO = 2,
+        TetriminoS = 3,
+        TetriminoZ = 4,
+        TetriminoJ = 5,
+        TetriminoL = 6,
+        TetriminoT = 7,
     }
 
     private void Start()
@@ -45,7 +51,7 @@ public class Game : MonoBehaviour
 
     private void InitializeBlockObjects()
     {
-        _blockObjects = new SpriteRenderer[FieldXLength, FieldYLength];
+        _blockObjects = new SpriteRenderer[FieldYLength, FieldXLength];
         for (var y = 0; y < FieldYLength; y++)
         {
             for (var x = 0; x < FieldXLength; x++)
@@ -55,11 +61,11 @@ public class Game : MonoBehaviour
                 block.transform.localRotation = Quaternion.identity;
                 block.transform.localScale = Vector3.one;
                 block.color = Color.black;
-                _blockObjects[x, y] = block;
+                _blockObjects[y, x] = block;
             }
         }
 
-        _nextBlockObjects = new SpriteRenderer[NextFieldXLength, NextFieldYLength];
+        _nextBlockObjects = new SpriteRenderer[NextFieldYLength, NextFieldXLength];
         for (var y = 0; y < NextFieldYLength; y++)
         {
             for (var x = 0; x < NextFieldXLength; x++)
@@ -69,17 +75,17 @@ public class Game : MonoBehaviour
                 block.transform.localRotation = Quaternion.identity;
                 block.transform.localScale = Vector3.one;
                 block.color = Color.black;
-                _nextBlockObjects[x, y] = block;
+                _nextBlockObjects[y, x] = block;
             }
         }
 
-        _fieldBlocks = new BlockType[FieldXLength, FieldYLength];
+        _fieldBlocks = new BlockType[FieldYLength, FieldXLength];
     }
 
     private void Initialize()
     {
-        _tetrimino.Initialize(BlockType.TetriminoI);
-        _nextTetrimino.Initialize(BlockType.TetriminoI);
+        _tetrimino.Initialize();
+        _nextTetrimino.Initialize();
         _fallInterval = 0.3f;
         _lastFallTime = DateTime.UtcNow;
         _lastControlTime = DateTime.UtcNow;
@@ -88,7 +94,7 @@ public class Game : MonoBehaviour
         {
             for (var x = 0; x < FieldXLength; x++)
             {
-                _fieldBlocks[x, y] = BlockType.None;
+                _fieldBlocks[y, x] = BlockType.None;
             }
         }
     }
@@ -112,12 +118,12 @@ public class Game : MonoBehaviour
                 var positions = _tetrimino.GetBlockPositions();
                 foreach (var position in positions)
                 {
-                    _fieldBlocks[position.x, position.y] = _tetrimino.BlockType;
+                    _fieldBlocks[position.y, position.x] = _tetrimino.BlockType;
                 }
                 DeleteLines();
 
                 _tetrimino.Initialize(_nextTetrimino.BlockType);
-                _nextTetrimino.Initialize(BlockType.TetriminoI);
+                _nextTetrimino.Initialize();
             }
         }
 
@@ -131,7 +137,7 @@ public class Game : MonoBehaviour
             var hasBlank = false;
             for (var x = 0; x < FieldXLength; x++)
             {
-                if (_fieldBlocks[x, y] == BlockType.None)
+                if (_fieldBlocks[y, x] == BlockType.None)
                 {
                     hasBlank = true;
                     break;
@@ -147,7 +153,7 @@ public class Game : MonoBehaviour
             {
                 for (var x = 0; x < FieldXLength; x++)
                 {
-                    _fieldBlocks[x, downY] = downY == 0 ? BlockType.None : _fieldBlocks[x, downY - 1];
+                    _fieldBlocks[downY, x] = downY == 0 ? BlockType.None : _fieldBlocks[downY - 1, x];
                 }
             }
         }
@@ -209,7 +215,7 @@ public class Game : MonoBehaviour
                 return false;
             if (y < 0 || y >= FieldYLength)
                 return false;
-            if (_fieldBlocks[x, y] != BlockType.None)
+            if (_fieldBlocks[y, x] != BlockType.None)
                 return false;
         }
 
@@ -223,8 +229,8 @@ public class Game : MonoBehaviour
         {
             for (var x = 0; x < FieldXLength; x++)
             {
-                var blockObj = _blockObjects[x, y];
-                var blockType = _fieldBlocks[x, y];
+                var blockObj = _blockObjects[y, x];
+                var blockType = _fieldBlocks[y, x];
                 blockObj.color = GetBlockColor(blockType);
             }
         }
@@ -235,7 +241,7 @@ public class Game : MonoBehaviour
             var color = GetBlockColor(_tetrimino.BlockType);
             foreach (var position in positions)
             {
-                var tetriminoBlock = _blockObjects[position.x, position.y];
+                var tetriminoBlock = _blockObjects[position.y, position.x];
                 tetriminoBlock.color = color;
             }
         }
@@ -245,7 +251,7 @@ public class Game : MonoBehaviour
         {
             for (var x = 0; x < NextFieldXLength; x++)
             {
-                _nextBlockObjects[x, y].color = GetBlockColor(BlockType.None);
+                _nextBlockObjects[y, x].color = GetBlockColor(BlockType.None);
             }
         }
 
@@ -255,7 +261,7 @@ public class Game : MonoBehaviour
             var color = GetBlockColor(_nextTetrimino.BlockType);
             foreach (var position in positions)
             {
-                var tetriminoBlock = _nextBlockObjects[position.x, position.y];
+                var tetriminoBlock = _nextBlockObjects[position.y, position.x];
                 tetriminoBlock.color = color;
             }
         }
@@ -269,6 +275,18 @@ public class Game : MonoBehaviour
                 return Color.black;
             case BlockType.TetriminoI:
                 return Color.cyan;
+            case BlockType.TetriminoO:
+                return Color.yellow;
+            case BlockType.TetriminoS:
+                return Color.green;
+            case BlockType.TetriminoZ:
+                return Color.red;
+            case BlockType.TetriminoJ:
+                return Color.blue;
+            case BlockType.TetriminoL:
+                return new Color(1, 0.5f, 0);
+            case BlockType.TetriminoT:
+                return Color.magenta;
             default:
                 return Color.white;
         }
