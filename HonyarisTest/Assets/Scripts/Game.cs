@@ -19,6 +19,24 @@ public class Game : MonoBehaviour
     [SerializeField]
     private SpriteRenderer _blockPrefab;
 
+    [SerializeField]
+    private GameObject _gameOverText;
+
+    [SerializeField]
+    private AudioSource _seAudioSource;
+
+    [SerializeField]
+    private AudioClip _rotateSe;
+
+    [SerializeField]
+    private AudioClip _moveSe;
+
+    [SerializeField]
+    private AudioClip _fixSe;
+
+    [SerializeField]
+    private AudioClip _deleteSe;
+
     private SpriteRenderer[,] _blockObjects;
     private SpriteRenderer[,] _nextBlockObjects;
 
@@ -40,6 +58,14 @@ public class Game : MonoBehaviour
         TetriminoJ = 5,
         TetriminoL = 6,
         TetriminoT = 7,
+    }
+
+    private GameState State { get; set; } = GameState.None;
+    public enum GameState
+    {
+        None,
+        Playing,
+        Result,
     }
 
     private void Start()
@@ -84,11 +110,13 @@ public class Game : MonoBehaviour
 
     private void Initialize()
     {
+        _gameOverText.SetActive(false);
         _tetrimino.Initialize();
         _nextTetrimino.Initialize();
         _fallInterval = 0.3f;
         _lastFallTime = DateTime.UtcNow;
         _lastControlTime = DateTime.UtcNow;
+        State = GameState.Playing;
 
         for (var y = 0; y < FieldYLength; y++)
         {
@@ -100,6 +128,28 @@ public class Game : MonoBehaviour
     }
 
     private void Update()
+    {
+        switch (State)
+        {
+            case GameState.Playing:
+                UpdatePlay();
+                break;
+            case GameState.Result:
+                UpdateResult();
+                break;
+        }
+    }
+
+    private void UpdateResult()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Initialize();
+            State = GameState.Playing;
+        }
+    }
+
+    private void UpdatePlay()
     {
         var controlled = ControlTetrimino();
 
@@ -120,18 +170,32 @@ public class Game : MonoBehaviour
                 {
                     _fieldBlocks[position.y, position.x] = _tetrimino.BlockType;
                 }
-                DeleteLines();
+                if (DeleteLines())
+                {
+                    _seAudioSource.PlayOneShot(_deleteSe);
+                }
+                else
+                {
+                    _seAudioSource.PlayOneShot(_fixSe);
+                }
 
                 _tetrimino.Initialize(_nextTetrimino.BlockType);
                 _nextTetrimino.Initialize();
+
+                if (!CanMoveTetrimino(0, 0))
+                {
+                    _gameOverText.SetActive(true);
+                    State = GameState.Result;
+                }
             }
         }
 
         Draw();
     }
 
-    private void DeleteLines()
+    private bool DeleteLines()
     {
+        var deleted = false;
         for (var y = FieldYLength - 1; y >= 0; )
         {
             var hasBlank = false;
@@ -149,6 +213,7 @@ public class Game : MonoBehaviour
                 continue;
             }
 
+            deleted = true;
             for (var downY = y; downY >= 0; downY--)
             {
                 for (var x = 0; x < FieldXLength; x++)
@@ -157,6 +222,7 @@ public class Game : MonoBehaviour
                 }
             }
         }
+        return deleted;
     }
 
     private bool ControlTetrimino()
@@ -169,6 +235,7 @@ public class Game : MonoBehaviour
         {
             if (TryMoveTetrimino(-1, 0))
             {
+                _seAudioSource.PlayOneShot(_moveSe);
                 _lastControlTime = now;
                 return true;
             }
@@ -177,6 +244,7 @@ public class Game : MonoBehaviour
         {
             if (TryMoveTetrimino(1, 0))
             {
+                _seAudioSource.PlayOneShot(_moveSe);
                 _lastControlTime = now;
                 return true;
             }
@@ -193,6 +261,7 @@ public class Game : MonoBehaviour
         {
             if (TryRollTetrimino())
             {
+                _seAudioSource.PlayOneShot(_rotateSe);
                 _lastControlTime = now;
                 return true;
             }
