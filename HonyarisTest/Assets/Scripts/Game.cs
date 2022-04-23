@@ -109,7 +109,12 @@ public class Game : MonoBehaviour
 
             if (!TryMoveTetrimino(0, 1))
             {
-                // TODO: テトリミノを固定
+                var positions = _tetrimino.GetBlockPositions();
+                foreach (var position in positions)
+                {
+                    _fieldBlocks[position.x, position.y] = _tetrimino.BlockType;
+                }
+
                 _tetrimino.Initialize(_nextTetrimino.BlockType);
                 _nextTetrimino.Initialize(BlockType.TetriminoI);
             }
