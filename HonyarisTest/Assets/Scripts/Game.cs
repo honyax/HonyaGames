@@ -7,16 +7,23 @@ public class Game : MonoBehaviour
 {
     const int FieldXLength = 10;
     const int FieldYLength = 20;
+    const int NextFieldXLength = 4;
+    const int NextFieldYLength = 4;
 
     [SerializeField]
     private GameObject _field;
 
     [SerializeField]
+    private GameObject _nextField;
+
+    [SerializeField]
     private SpriteRenderer _blockPrefab;
 
     private SpriteRenderer[,] _blockObjects;
+    private SpriteRenderer[,] _nextBlockObjects;
 
     private Tetrimino _tetrimino = new Tetrimino();
+    private Tetrimino _nextTetrimino = new Tetrimino();
     private float _fallInterval;
     private DateTime _lastFallTime;
     private DateTime _lastControlTime;
@@ -51,16 +58,32 @@ public class Game : MonoBehaviour
                 _blockObjects[x, y] = block;
             }
         }
+
+        _nextBlockObjects = new SpriteRenderer[NextFieldXLength, NextFieldYLength];
+        for (var y = 0; y < NextFieldYLength; y++)
+        {
+            for (var x = 0; x < NextFieldXLength; x++)
+            {
+                var block = Instantiate(_blockPrefab, _nextField.transform);
+                block.transform.localPosition = new Vector3(x, y, 0);
+                block.transform.localRotation = Quaternion.identity;
+                block.transform.localScale = Vector3.one;
+                block.color = Color.black;
+                _nextBlockObjects[x, y] = block;
+            }
+        }
+
+        _fieldBlocks = new BlockType[FieldXLength, FieldYLength];
     }
 
     private void Initialize()
     {
         _tetrimino.Initialize(BlockType.TetriminoI);
+        _nextTetrimino.Initialize(BlockType.TetriminoI);
         _fallInterval = 0.3f;
         _lastFallTime = DateTime.UtcNow;
         _lastControlTime = DateTime.UtcNow;
 
-        _fieldBlocks = new BlockType[FieldXLength, FieldYLength];
         for (var y = 0; y < FieldYLength; y++)
         {
             for (var x = 0; x < FieldXLength; x++)
@@ -86,7 +109,9 @@ public class Game : MonoBehaviour
 
             if (!TryMoveTetrimino(0, 1))
             {
-                // TODO: FIX TETRIMINO AND NEXT
+                // TODO: テトリミノを固定
+                _tetrimino.Initialize(_nextTetrimino.BlockType);
+                _nextTetrimino.Initialize(BlockType.TetriminoI);
             }
         }
 
@@ -158,6 +183,7 @@ public class Game : MonoBehaviour
 
     private void Draw()
     {
+        // Draw Field
         for (var y = 0; y < FieldYLength; y++)
         {
             for (var x = 0; x < FieldXLength; x++)
@@ -168,15 +194,34 @@ public class Game : MonoBehaviour
             }
         }
 
-        var positions = _tetrimino.GetBlockPositions();
-        foreach (var position in positions)
+        // Draw Tetrimino
         {
-            var x = position.x;
-            var y = position.y;
-            if (0 <= x && x < FieldXLength && 0 <= y && y < FieldYLength)
+            var positions = _tetrimino.GetBlockPositions();
+            var color = GetBlockColor(_tetrimino.BlockType);
+            foreach (var position in positions)
             {
-                var tetriminoBlock = _blockObjects[x, y];
-                tetriminoBlock.color = GetBlockColor(_tetrimino.BlockType);
+                var tetriminoBlock = _blockObjects[position.x, position.y];
+                tetriminoBlock.color = color;
+            }
+        }
+
+        // Draw Next Field
+        for (var y = 0; y < NextFieldYLength; y++)
+        {
+            for (var x = 0; x < NextFieldXLength; x++)
+            {
+                _nextBlockObjects[x, y].color = GetBlockColor(BlockType.None);
+            }
+        }
+
+        // Draw Next Tetrimino
+        {
+            var positions = _nextTetrimino.GetBlockPositions();
+            var color = GetBlockColor(_nextTetrimino.BlockType);
+            foreach (var position in positions)
+            {
+                var tetriminoBlock = _nextBlockObjects[position.x, position.y];
+                tetriminoBlock.color = color;
             }
         }
     }
