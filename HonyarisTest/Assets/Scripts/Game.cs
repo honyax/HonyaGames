@@ -189,6 +189,14 @@ public class Game : MonoBehaviour
                 return true;
             }
         }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (TryRollTetrimino())
+            {
+                _lastControlTime = now;
+                return true;
+            }
+        }
 
         return false;
     }
@@ -211,6 +219,35 @@ public class Game : MonoBehaviour
         {
             var x = blockPosition.x + deltaX;
             var y = blockPosition.y + deltaY;
+            if (x < 0 || x >= FieldXLength)
+                return false;
+            if (y < 0 || y >= FieldYLength)
+                return false;
+            if (_fieldBlocks[y, x] != BlockType.None)
+                return false;
+        }
+
+        return true;
+    }
+
+    private bool TryRollTetrimino()
+    {
+        if (CanRollTetrimino())
+        {
+            _tetrimino.Roll();
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool CanRollTetrimino()
+    {
+        var blockPositions = _tetrimino.GetRolledBlockPositions();
+        foreach (var blockPosition in blockPositions)
+        {
+            var x = blockPosition.x;
+            var y = blockPosition.y;
             if (x < 0 || x >= FieldXLength)
                 return false;
             if (y < 0 || y >= FieldYLength)
@@ -261,7 +298,7 @@ public class Game : MonoBehaviour
             var color = GetBlockColor(_nextTetrimino.BlockType);
             foreach (var position in positions)
             {
-                var tetriminoBlock = _nextBlockObjects[position.y, position.x];
+                var tetriminoBlock = _nextBlockObjects[position.y, position.x - 3];
                 tetriminoBlock.color = color;
             }
         }
