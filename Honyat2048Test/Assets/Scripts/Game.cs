@@ -35,6 +35,7 @@ public class Game : MonoBehaviour
         {
             case GameState.SpawnBlock:
                 var block = Instantiate(_blockPrefab, this.transform);
+                block.Initialize(UnityEngine.Random.Range(1, 7));
                 _currentBlock = block;
                 _blocks.Add(block);
                 _state = GameState.WaitForDrag;
