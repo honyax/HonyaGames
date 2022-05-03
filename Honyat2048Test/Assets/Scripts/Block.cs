@@ -10,7 +10,8 @@ public class Block : MonoBehaviour
 
     public int Id { get; private set; }
     public int Point { get; private set; }
-    public bool Broken { get; private set; } = false;
+
+    private Material _material;
 
     private void Start()
     {
@@ -37,26 +38,19 @@ public class Block : MonoBehaviour
         if (opponent == null)
             return;
 
-        if (opponent.Point == Point)
+        if (opponent.Point == Point && Id < opponent.Id)
         {
-            if (opponent.Id < Id)
-            {
-                // ID‚ÌŒÃ‚¢•û‚ðŽc‚·‚½‚ßAŽ©•ª‚Ì‚ªV‚µ‚¯‚ê‚Î”j‰óƒtƒ‰ƒO‚ðON
-                Broken = true;
-            }
-            else
-            {
-                // Žc‚·•û‚ÍAÕ“ËŽž‚É”ò‚Î‚·
-                var vec = (transform.position - collision.transform.position).normalized;
-                Rb.AddForce(vec * opponent.Rb.velocity.magnitude * opponent.Rb.mass * 10);
-
-                GrowUp();
-            }
+            Game.Instance.HitBlocks(this, opponent);
         }
     }
 
-    public void GrowUp()
+    public void GrowUp(Vector3 opponentPosition, Rigidbody opponentRigidbody)
     {
+        // ä½ç½®ã‚’2ã¤ã®ä¸­å¿ƒã«ã—ã€å¨åŠ›ã‚’ã¤ã‘ã‚‹
+        transform.position = (transform.position + opponentPosition) / 2;
+        var vec = (transform.position - opponentPosition).normalized;
+        Rb.AddForce(vec * opponentRigidbody.velocity.magnitude * opponentRigidbody.mass * 10);
+
         Point++;
         UpdateScore();
     }
@@ -73,6 +67,33 @@ public class Block : MonoBehaviour
         {
             scoreText.text = score.ToString();
             scoreText.fontSize = 36 - Point;
+        }
+
+        var color = _blockColors[Point % _blockColors.Length];
+        if (_material == null)
+        {
+            _material = gameObject.GetComponent<MeshRenderer>().material;
+        }
+        _material.color = color;
+    }
+
+    private static Color[] _blockColors;
+    public static void InitializeBlockColors()
+    {
+        const int HNUM = 6;
+        const int SNUM = 3;
+        const float HSPACE = 1f / HNUM;
+        _blockColors = new Color[SNUM * HNUM];
+        for (var sCnt = 0; sCnt < SNUM; sCnt++)
+        {
+            for (var hCnt = 0; hCnt < HNUM; hCnt++)
+            {
+                var h = HSPACE * hCnt;
+                var s = 1f - 0.3f * sCnt;
+                var v = 1f;
+                var color = Color.HSVToRGB(h, s, v);
+                _blockColors[sCnt * HNUM + hCnt] = color;
+            }
         }
     }
 }

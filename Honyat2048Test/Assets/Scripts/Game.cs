@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Game : MonoBehaviour
+public class Game : SingletonMonoBehaviour<Game>
 {
     [SerializeField]
     private Block _blockPrefab;
@@ -12,7 +11,7 @@ public class Game : MonoBehaviour
     private Block _currentBlock = null;
     private DateTime _thrownTime;
     private int _id = 0;
-    private List<Block> _removeBlocks = new List<Block>();
+    private List<Tuple<Block, Block>> _hitPairBlocks = new List<Tuple<Block, Block>>();
 
     private enum GameState
     {
@@ -28,6 +27,7 @@ public class Game : MonoBehaviour
 
     void Start()
     {
+        Block.InitializeBlockColors();
         _state = GameState.SpawnBlock;
     }
 
@@ -76,19 +76,15 @@ public class Game : MonoBehaviour
                 break;
         }
 
-        _removeBlocks.Clear();
-        foreach (var block in _blocks)
+        foreach (var pair in _hitPairBlocks)
         {
-            if (block.Broken)
-            {
-                _removeBlocks.Add(block);
-            }
+            var growBlock = pair.Item1;
+            var destroyBlock = pair.Item2;
+            growBlock.GrowUp(destroyBlock.transform.position, destroyBlock.Rb);
+            _blocks.Remove(destroyBlock);
+            Destroy(destroyBlock.gameObject);
         }
-        foreach (var removeBlock in _removeBlocks)
-        {
-            _blocks.Remove(removeBlock);
-            Destroy(removeBlock.gameObject);
-        }
+        _hitPairBlocks.Clear();
     }
 
     private void DragBlock()
@@ -98,5 +94,12 @@ public class Game : MonoBehaviour
         var pos = _currentBlock.transform.localPosition;
         var targetPosX = Mathf.Clamp(targetPos.x, -2.5f, 2.5f);
         _currentBlock.transform.localPosition = new Vector3(targetPosX, pos.y, pos.z);
+    }
+
+    public void HitBlocks(Block a, Block b)
+    {
+        // IDÇÃè¨Ç≥Ç¢ï˚Ç Item1, ëÂÇ´Ç¢ï˚Ç Item2 Ç…Ç∑ÇÈ
+        var pair = a.Id < b.Id ? Tuple.Create(a, b) : Tuple.Create(b, a);
+        _hitPairBlocks.Add(pair);
     }
 }
