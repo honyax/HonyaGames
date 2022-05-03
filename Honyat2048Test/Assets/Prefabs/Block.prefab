@@ -183,6 +183,8 @@ GameObject:
   - component: {fileID: 3087456423405837829}
   - component: {fileID: 2123168872148586912}
   - component: {fileID: 4220987338966541674}
+  - component: {fileID: 2332727257870281932}
+  - component: {fileID: 3715108836443384273}
   - component: {fileID: 3098227772858478479}
   m_Layer: 0
   m_Name: Block
@@ -260,6 +262,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!54 &2332727257870281932
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2419288346026706111}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!64 &3715108836443384273
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2419288346026706111}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8156870392999314590, guid: 519003b3bce8b8f48828f1e5ee8f8211, type: 3}
 --- !u!114 &3098227772858478479
 MonoBehaviour:
   m_ObjectHideFlags: 0

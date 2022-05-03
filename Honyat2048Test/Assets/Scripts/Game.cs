@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,27 +8,68 @@ public class Game : MonoBehaviour
     [SerializeField]
     private Block _blockPrefab;
 
+    private List<Block> _blocks = new List<Block>();
     private Block _currentBlock = null;
+    private DateTime _thrownTime;
+
+    private enum GameState
+    {
+        None,
+        SpawnBlock,
+        WaitForDrag,
+        Dragging,
+        ThrowBlock,
+        Thrown,
+    }
+
+    private GameState _state = GameState.None;
 
     void Start()
     {
-        SpawnBlock();
-    }
-
-    void SpawnBlock()
-    {
-        var block = Instantiate(_blockPrefab, this.transform);
-        _currentBlock = block;
+        _state = GameState.SpawnBlock;
     }
 
     private void Update()
     {
-        if (_currentBlock == null)
-            return;
-
-        if (Input.GetMouseButton(0))
+        switch (_state)
         {
-            DragBlock();
+            case GameState.SpawnBlock:
+                var block = Instantiate(_blockPrefab, this.transform);
+                _currentBlock = block;
+                _blocks.Add(block);
+                _state = GameState.WaitForDrag;
+                break;
+            case GameState.WaitForDrag:
+                if (Input.GetMouseButton(0))
+                {
+                    _state = GameState.Dragging;
+                }
+                break;
+            case GameState.Dragging:
+                if (Input.GetMouseButtonUp(0))
+                {
+                    _state = GameState.ThrowBlock;
+                }
+                else
+                {
+                    DragBlock();
+                }
+                break;
+            case GameState.ThrowBlock:
+                _currentBlock.Throw();
+                _thrownTime = DateTime.UtcNow;
+                _state = GameState.Thrown;
+                break;
+            case GameState.Thrown:
+                if ((DateTime.UtcNow - _thrownTime).TotalSeconds > 1)
+                {
+                    _state = GameState.SpawnBlock;
+                }
+                break;
+
+            case GameState.None:
+            default:
+                break;
         }
     }
 
