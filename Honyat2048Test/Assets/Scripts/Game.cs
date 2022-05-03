@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Game : SingletonMonoBehaviour<Game>
 {
     [SerializeField]
     private Block _blockPrefab;
 
+    [SerializeField]
+    private TextMeshProUGUI _scoreText;
+
     private List<Block> _blocks = new List<Block>();
     private Block _currentBlock = null;
     private DateTime _thrownTime;
     private int _id = 0;
     private List<Tuple<Block, Block>> _hitPairBlocks = new List<Tuple<Block, Block>>();
+    private int _totalScore = 0;
 
     private enum GameState
     {
@@ -84,6 +89,9 @@ public class Game : SingletonMonoBehaviour<Game>
             growBlock.GrowUp(destroyBlock.transform.position, destroyBlock.Rb);
             _blocks.Remove(destroyBlock);
             Destroy(destroyBlock.gameObject);
+            _totalScore += growBlock.Score;
+
+            _scoreText.text = _totalScore.ToString();
         }
         _hitPairBlocks.Clear();
     }

@@ -10,6 +10,18 @@ public class Block : MonoBehaviour
 
     public int Id { get; private set; }
     public int Point { get; private set; }
+    public int Score
+    {
+        get
+        {
+            var score = 1;
+            for (var i = 0; i < Point; i++)
+            {
+                score *= 2;
+            }
+            return score;
+        }
+    }
 
     private Material _material;
 
@@ -57,15 +69,11 @@ public class Block : MonoBehaviour
 
     private void UpdateScore()
     {
-        var score = 1;
-        for (var i = 0; i < Point; i++)
-        {
-            score *= 2;
-        }
+        var scoreStr = Score.ToString();
 
         foreach (var scoreText in _scoreTexts)
         {
-            scoreText.text = score.ToString();
+            scoreText.text = scoreStr;
             scoreText.fontSize = 36 - Point;
         }
 
