@@ -27,6 +27,7 @@ public class Game : SingletonMonoBehaviour<Game>
 
     void Start()
     {
+        Physics.gravity = Vector3.down * 4.0f;
         Block.InitializeBlockColors();
         _state = GameState.SpawnBlock;
     }
