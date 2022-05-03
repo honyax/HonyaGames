@@ -11,6 +11,8 @@ public class Game : MonoBehaviour
     private List<Block> _blocks = new List<Block>();
     private Block _currentBlock = null;
     private DateTime _thrownTime;
+    private int _id = 0;
+    private List<Block> _removeBlocks = new List<Block>();
 
     private enum GameState
     {
@@ -35,7 +37,8 @@ public class Game : MonoBehaviour
         {
             case GameState.SpawnBlock:
                 var block = Instantiate(_blockPrefab, this.transform);
-                block.Initialize(UnityEngine.Random.Range(1, 7));
+                _id++;
+                block.Initialize(_id, UnityEngine.Random.Range(1, 7));
                 _currentBlock = block;
                 _blocks.Add(block);
                 _state = GameState.WaitForDrag;
@@ -71,6 +74,20 @@ public class Game : MonoBehaviour
             case GameState.None:
             default:
                 break;
+        }
+
+        _removeBlocks.Clear();
+        foreach (var block in _blocks)
+        {
+            if (block.Broken)
+            {
+                _removeBlocks.Add(block);
+            }
+        }
+        foreach (var removeBlock in _removeBlocks)
+        {
+            _blocks.Remove(removeBlock);
+            Destroy(removeBlock.gameObject);
         }
     }
 
