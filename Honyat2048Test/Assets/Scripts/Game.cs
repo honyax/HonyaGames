@@ -17,6 +17,12 @@ public class Game : SingletonMonoBehaviour<Game>
     [SerializeField]
     private GameObject _gameOverText;
 
+    [SerializeField]
+    private AudioSource _seAudioSource;
+
+    [SerializeField]
+    private AudioClip _breakSe;
+
     private List<Block> _blocks = new List<Block>();
     private Block _currentBlock = null;
     private DateTime _thrownTime;
@@ -121,6 +127,7 @@ public class Game : SingletonMonoBehaviour<Game>
             Instantiate(_hitEffectPrefab, destroyBlock.transform.position, Quaternion.identity);
             _blocks.Remove(destroyBlock);
             Destroy(destroyBlock.gameObject);
+            _seAudioSource.PlayOneShot(_breakSe);
             _totalScore += growBlock.Score;
 
             _scoreText.text = _totalScore.ToString();
@@ -140,7 +147,7 @@ public class Game : SingletonMonoBehaviour<Game>
     private void DragBlock()
     {
         var mousePos = Input.mousePosition;
-        var targetPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 6));
+        var targetPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 10));
         var pos = _currentBlock.transform.localPosition;
         var targetPosX = Mathf.Clamp(targetPos.x, -2.5f, 2.5f);
         _currentBlock.transform.localPosition = new Vector3(targetPosX, pos.y, pos.z);
