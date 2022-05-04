@@ -9,6 +9,9 @@ public class Game : SingletonMonoBehaviour<Game>
     private Block _blockPrefab;
 
     [SerializeField]
+    private ParticleSystem _hitEffectPrefab;
+
+    [SerializeField]
     private TextMeshProUGUI _scoreText;
 
     [SerializeField]
@@ -115,6 +118,7 @@ public class Game : SingletonMonoBehaviour<Game>
             var growBlock = pair.Item1;
             var destroyBlock = pair.Item2;
             growBlock.GrowUp(destroyBlock.transform.position, destroyBlock.Rb);
+            Instantiate(_hitEffectPrefab, destroyBlock.transform.position, Quaternion.identity);
             _blocks.Remove(destroyBlock);
             Destroy(destroyBlock.gameObject);
             _totalScore += growBlock.Score;
