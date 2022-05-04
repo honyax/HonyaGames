@@ -11,6 +11,9 @@ public class Game : SingletonMonoBehaviour<Game>
     [SerializeField]
     private TextMeshProUGUI _scoreText;
 
+    [SerializeField]
+    private GameObject _gameOverText;
+
     private List<Block> _blocks = new List<Block>();
     private Block _currentBlock = null;
     private DateTime _thrownTime;
@@ -21,11 +24,13 @@ public class Game : SingletonMonoBehaviour<Game>
     private enum GameState
     {
         None,
+        Initialize,
         SpawnBlock,
         WaitForDrag,
         Dragging,
         ThrowBlock,
         Thrown,
+        GameOver,
     }
 
     private GameState _state = GameState.None;
@@ -34,13 +39,29 @@ public class Game : SingletonMonoBehaviour<Game>
     {
         Physics.gravity = Vector3.down * 4.0f;
         Block.InitializeBlockColors();
-        _state = GameState.SpawnBlock;
+        _state = GameState.Initialize;
     }
 
     private void Update()
     {
         switch (_state)
         {
+            case GameState.Initialize:
+                foreach (var b in _blocks)
+                {
+                    Destroy(b.gameObject);
+                }
+                _blocks.Clear();
+                _currentBlock = null;
+                _thrownTime = DateTime.MinValue;
+                _id = 0;
+                _hitPairBlocks.Clear();
+                _totalScore = 0;
+                _gameOverText.SetActive(false);
+                _scoreText.text = _totalScore.ToString();
+                _state = GameState.SpawnBlock;
+                return;
+
             case GameState.SpawnBlock:
                 var block = Instantiate(_blockPrefab, this.transform);
                 _id++;
@@ -77,6 +98,13 @@ public class Game : SingletonMonoBehaviour<Game>
                 }
                 break;
 
+            case GameState.GameOver:
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    _state = GameState.Initialize;
+                }
+                return;
+
             case GameState.None:
             default:
                 break;
@@ -94,6 +122,15 @@ public class Game : SingletonMonoBehaviour<Game>
             _scoreText.text = _totalScore.ToString();
         }
         _hitPairBlocks.Clear();
+
+        foreach (var block in _blocks)
+        {
+            if (block.BadZoneSeconds > 3)
+            {
+                _gameOverText.SetActive(true);
+                _state = GameState.GameOver;
+            }
+        }
     }
 
     private void DragBlock()

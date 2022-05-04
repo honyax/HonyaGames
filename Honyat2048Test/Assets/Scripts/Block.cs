@@ -22,6 +22,8 @@ public class Block : MonoBehaviour
             return score;
         }
     }
+    private bool _thrown = false;
+    public float BadZoneSeconds { get; private set; } = 0;
 
     private Material _material;
 
@@ -42,6 +44,7 @@ public class Block : MonoBehaviour
     {
         Rb.isKinematic = false;
         Rb.AddForce(Vector3.back * 750);
+        _thrown = true;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -62,6 +65,8 @@ public class Block : MonoBehaviour
         transform.position = (transform.position + opponentPosition) / 2;
         var vec = (transform.position - opponentPosition).normalized;
         Rb.AddForce(vec * opponentRigidbody.velocity.magnitude * opponentRigidbody.mass * 10);
+
+        BadZoneSeconds = 0;
 
         Point++;
         UpdateScore();
@@ -101,6 +106,22 @@ public class Block : MonoBehaviour
                 var v = 1f;
                 var color = Color.HSVToRGB(h, s, v);
                 _blockColors[sCnt * HNUM + hCnt] = color;
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (_thrown)
+        {
+            var pos = transform.position;
+            if (pos.z > -4 && pos.y < 0.5f)
+            {
+                BadZoneSeconds += Time.deltaTime;
+            }
+            else
+            {
+                BadZoneSeconds = 0;
             }
         }
     }
