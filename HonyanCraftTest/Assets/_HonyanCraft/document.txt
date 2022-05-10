@@ -1,0 +1,13 @@
+■HonyanCraft
+０１：プロジェクト新規作成
+０２：主要アセット（PUN2, Starter Assets Third Person、Haon SD series）をインストールし、AppId設定、New Input Systemを有効化
+０３：SDユニティちゃんをTPで出す。地面も出す https://youtu.be/4QuPlKzdq14?t=462
+　　１．PlayerAmature, PlayerFollowCamera, MainCameraと、SDユニティちゃんをシーンに出す（Prefabをunpack）
+　　２．PlayerAmature/Geometry配下を削除し、SDユニティちゃんのMeshを移す
+　　３．PlayerAmatureのAnimatorのAvatarを、SDユニティちゃんのアバターを指すようにする
+　　４．PlayerFollowCameraのFollowを、PlayerAmature/PlayerCameraRootにする
+０４：Photonでキャラを同期する仕組みを作る
+０５：
+０６：
+０７：
+
