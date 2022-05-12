@@ -7,7 +7,13 @@
 　　３．PlayerAmatureのAnimatorのAvatarを、SDユニティちゃんのアバターを指すようにする
 　　４．PlayerFollowCameraのFollowを、PlayerAmature/PlayerCameraRootにする
 ０４：Photonでキャラを同期する仕組みを作る
-０５：
+　　１．PhotonServerSettingsを設定
+　　　　https://zenn.dev/o8que/books/bdcb9af27bdd7d/viewer/c04ad5
+　　２．Missing ScriptsがあるとPrefab化出来ないので一括削除するスクリプトを使う、
+　　　　https://dkrevel.com/missing-script-delete/
+　　３．Prefab化したSDちゃんに、PhotonView, PhotonTransformView, PhotonAnimatorViewをアタッチ
+　　　　PhotonAnimatorViewのパラメータで、Speed, MotionSpeedをContinuous, Jump, Grounded, FreeFallをDiscreteに設定
+　　４．ビルドしたらフルスクリーンモードになったので、Player SettingsでWindowedに
 ０６：
 ０７：
 
