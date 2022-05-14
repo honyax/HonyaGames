@@ -12,7 +12,16 @@ public class Player : MonoBehaviourPun
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             var pos = transform.position;
-            Game.Instance.CreateBlock(Mathf.CeilToInt(pos.x), Mathf.CeilToInt(pos.y), Mathf.CeilToInt(pos.z));
+            var blockPos = Vector3Int.CeilToInt(pos);
+            PhotonController.Instance.photonView.RPC(nameof(PhotonController.CreateBlockRequest),
+                RpcTarget.MasterClient, blockPos.x, blockPos.y, blockPos.z, 0);
+        }
+        else if (Mouse.current.rightButton.wasPressedThisFrame)
+        {
+            var pos = transform.position;
+            var blockPos = Vector3Int.CeilToInt(pos);
+            PhotonController.Instance.photonView.RPC(nameof(PhotonController.DeleteBlockRequest),
+                RpcTarget.MasterClient, blockPos.x, blockPos.y, blockPos.z);
         }
     }
 }

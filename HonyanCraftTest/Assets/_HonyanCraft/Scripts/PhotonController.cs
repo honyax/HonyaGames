@@ -47,15 +47,39 @@ public class PhotonController : SingletonMonoBehaviourPunCallbacks<PhotonControl
     }
 
     [PunRPC]
-    private void BootRequest(PhotonMessageInfo info)
+    public void BootRequest(PhotonMessageInfo info)
     {
         Debug.Log($"BootRequest {info.Sender.NickName}");
         photonView.RPC(nameof(BootResponse), info.Sender);
     }
 
     [PunRPC]
-    private void BootResponse(PhotonMessageInfo info)
+    public void BootResponse(PhotonMessageInfo info)
     {
         Debug.Log($"BootResponse {info.Sender.NickName}");
+    }
+
+    [PunRPC]
+    public void CreateBlockRequest(int x, int y, int z, int blockId)
+    {
+        Game.Instance.TryCreateBlock(new Vector3Int(x, y, z), blockId);
+    }
+
+    [PunRPC]
+    public void CreateBlockResponse(int x, int y, int z, int blockId)
+    {
+        Game.Instance.CreateBlockExec(new Vector3Int(x, y, z), blockId);
+    }
+
+    [PunRPC]
+    public void DeleteBlockRequest(int x, int y, int z)
+    {
+        Game.Instance.TryDeleteBlock(new Vector3Int(x, y, z));
+    }
+
+    [PunRPC]
+    public void DeleteBlockResponse(int x, int y, int z)
+    {
+        Game.Instance.DeleteBlockExec(new Vector3Int(x, y, z));
     }
 }
