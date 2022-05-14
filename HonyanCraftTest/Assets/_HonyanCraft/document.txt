@@ -14,6 +14,18 @@
 　　３．Prefab化したSDちゃんに、PhotonView, PhotonTransformView, PhotonAnimatorViewをアタッチ
 　　　　PhotonAnimatorViewのパラメータで、Speed, MotionSpeedをContinuous, Jump, Grounded, FreeFallをDiscreteに設定
 　　４．ビルドしたらフルスクリーンモードになったので、Player SettingsでWindowedに
-０６：
-０７：
-
+０５：ブロックを配置
+　　１．3D Blocksアセットをインポート
+　　２．RandomMatchMaker.cs -> PhotonController.csに変更し、通信処理はPhotonController.csに集約
+　　３．BootRequest/BootResponseをひとまず定義
+　　４．Game.cs, Player.csを作成し、クリックで自分の位置にブロックを配置（ひとまず固定で一つ）
+０６：ブロックを同期
+　　１．クリックでマスターに通知
+　　２．マスターでブロックを配置し、クライアントに返信
+　　３．返信受信時にブロックを配置
+０７：複数の種類のブロックに対応
+　　１．ブロックの選択機能
+　　２．選択状態のブロックを画面に表示する
+　　３．通信にブロックのIDを追加
+０８：ブロックの削除に対応
+０９：サウンド、エフェクト追加

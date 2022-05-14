@@ -3,11 +3,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using Cinemachine;
 
-public class RandomMatchMaker : MonoBehaviourPunCallbacks
+public class PhotonController : SingletonMonoBehaviourPunCallbacks<PhotonController>
 {
-    [SerializeField]
-    private GameObject _playerPrefab;
-
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
@@ -33,7 +30,7 @@ public class RandomMatchMaker : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         var obj = PhotonNetwork.Instantiate(
-            _playerPrefab.name,
+            Game.Instance.PlayerPrefab.name,
             new Vector3(0, 1, 0),
             Quaternion.identity,
             0
@@ -43,5 +40,22 @@ public class RandomMatchMaker : MonoBehaviourPunCallbacks
         var playerCameraRoot = obj.transform.Find("PlayerCameraRoot");
         virtualCamera.Follow = playerCameraRoot;
         virtualCamera.LookAt = obj.transform;
+        obj.name = "MyPlayerArmature";
+        obj.AddComponent<Player>();
+
+        photonView.RPC(nameof(BootRequest), RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    private void BootRequest(PhotonMessageInfo info)
+    {
+        Debug.Log($"BootRequest {info.Sender.NickName}");
+        photonView.RPC(nameof(BootResponse), info.Sender);
+    }
+
+    [PunRPC]
+    private void BootResponse(PhotonMessageInfo info)
+    {
+        Debug.Log($"BootResponse {info.Sender.NickName}");
     }
 }

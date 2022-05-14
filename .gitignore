@@ -62,6 +62,8 @@ crashlytics-build.properties
 */Logs/
 */obj/
 */Temp/
+*/UserSettings
+*/output_pc
 
 HonyaBlackJack/Assets/Playing Cards/
 Honyat2048/Assets/JMO Assets/
@@ -74,10 +76,9 @@ HonyanCraft/Assets/SD Unity-Chan Haon Custom/
 HonyanCraft/Assets/StarterAssets/
 HonyanCraft/Assets/ToonyTinyPeople/
 HonyanCraft/Assets/unity-chan!/
-HonyanCraft/output_pc/
 Honyat2048Test/Assets/TextMesh Pro/
 Honyat2048Test/Assets/JMO Assets/
 HonyanCraftTest/Assets/Photon/
 HonyanCraftTest/Assets/SD Unity-Chan Haon Custom/
 HonyanCraftTest/Assets/StarterAssets/
-HonyanCraftTest/output_pc/
+HonyanCraftTest/Assets/3D Blocks/
