@@ -13,6 +13,14 @@ public class Game : SingletonMonoBehaviour<Game>
 
     private Dictionary<Vector3Int, int> _masterBlockDict = new Dictionary<Vector3Int, int>();
     private Dictionary<Vector3Int, GameObject> _blockDict = new Dictionary<Vector3Int, GameObject>();
+    private int _currentBlockIndex = 0;
+    public int CurrentBlockIndex { get { return _currentBlockIndex; } }
+
+    public void ChangeBlockIndex(bool increment)
+    {
+        _currentBlockIndex += increment ? 1 : -1;
+        _currentBlockIndex = Mathf.Clamp(_currentBlockIndex, 0, _blockPrefabs.Length - 1);
+    }
 
     public void SendMasterBlocks(Photon.Realtime.Player newPlayer)
     {

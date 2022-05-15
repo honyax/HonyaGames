@@ -14,7 +14,7 @@ public class Player : MonoBehaviourPun
             var pos = transform.position;
             var blockPos = Vector3Int.CeilToInt(pos);
             PhotonController.Instance.photonView.RPC(nameof(PhotonController.CreateBlockRequest),
-                RpcTarget.MasterClient, blockPos.x, blockPos.y, blockPos.z, 0);
+                RpcTarget.MasterClient, blockPos.x, blockPos.y, blockPos.z, Game.Instance.CurrentBlockIndex);
         }
         else if (Mouse.current.rightButton.wasPressedThisFrame)
         {
@@ -22,6 +22,14 @@ public class Player : MonoBehaviourPun
             var blockPos = Vector3Int.CeilToInt(pos);
             PhotonController.Instance.photonView.RPC(nameof(PhotonController.DeleteBlockRequest),
                 RpcTarget.MasterClient, blockPos.x, blockPos.y, blockPos.z);
+        }
+        else if (Keyboard.current.xKey.wasPressedThisFrame)
+        {
+            Game.Instance.ChangeBlockIndex(true);
+        }
+        else if (Keyboard.current.zKey.wasPressedThisFrame)
+        {
+            Game.Instance.ChangeBlockIndex(false);
         }
     }
 }
