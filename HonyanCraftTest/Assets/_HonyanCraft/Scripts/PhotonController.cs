@@ -50,13 +50,14 @@ public class PhotonController : SingletonMonoBehaviourPunCallbacks<PhotonControl
     public void BootRequest(PhotonMessageInfo info)
     {
         Debug.Log($"BootRequest {info.Sender.NickName}");
-        photonView.RPC(nameof(BootResponse), info.Sender);
+        Game.Instance.SendMasterBlocks(info.Sender);
     }
 
     [PunRPC]
-    public void BootResponse(PhotonMessageInfo info)
+    public void BootResponse(int[] blocks, PhotonMessageInfo info)
     {
         Debug.Log($"BootResponse {info.Sender.NickName}");
+        Game.Instance.ReceiveMasterBlocks(blocks);
     }
 
     [PunRPC]

@@ -14,6 +14,33 @@ public class Game : SingletonMonoBehaviour<Game>
     private Dictionary<Vector3Int, int> _masterBlockDict = new Dictionary<Vector3Int, int>();
     private Dictionary<Vector3Int, GameObject> _blockDict = new Dictionary<Vector3Int, GameObject>();
 
+    public void SendMasterBlocks(Photon.Realtime.Player newPlayer)
+    {
+        var blocks = new int[_masterBlockDict.Count * 4];
+        var index = 0;
+        foreach (var block in _masterBlockDict)
+        {
+            blocks[index * 4 + 0] = block.Key.x;
+            blocks[index * 4 + 1] = block.Key.y;
+            blocks[index * 4 + 2] = block.Key.z;
+            blocks[index * 4 + 3] = block.Value;
+            index++;
+        }
+        PhotonController.Instance.photonView.RPC(nameof(PhotonController.BootResponse),
+            newPlayer, blocks);
+    }
+
+    public void ReceiveMasterBlocks(int[] blocks)
+    {
+        var blockCount = blocks.Length / 4;
+        for (var i = 0; i < blockCount; i++)
+        {
+            var pos = new Vector3Int(blocks[i * 4 + 0], blocks[i * 4 + 1], blocks[i * 4 + 2]);
+            var blockId = blocks[i * 4 + 3];
+            CreateBlockExec(pos, blockId);
+        }
+    }
+
     public void TryCreateBlock(Vector3Int pos, int blockId)
     {
         if (_masterBlockDict.TryAdd(pos, blockId))
@@ -28,6 +55,8 @@ public class Game : SingletonMonoBehaviour<Game>
         var blockObj = Instantiate(_blockPrefabs[blockId], Vector3.zero, Quaternion.identity);
         blockObj.transform.position = new Vector3(pos.x, pos.y, pos.z);
         _blockDict.Add(pos, blockObj);
+
+        _masterBlockDict.TryAdd(pos, blockId);
     }
 
     public void TryDeleteBlock(Vector3Int pos)
