@@ -9,17 +9,37 @@ public class Game : SingletonMonoBehaviour<Game>
     public GameObject PlayerPrefab { get { return _playerPrefab; } }
 
     [SerializeField]
+    private Transform _sample;
+
+    [SerializeField]
     private GameObject[] _blockPrefabs;
 
     private Dictionary<Vector3Int, int> _masterBlockDict = new Dictionary<Vector3Int, int>();
     private Dictionary<Vector3Int, GameObject> _blockDict = new Dictionary<Vector3Int, GameObject>();
     private int _currentBlockIndex = 0;
     public int CurrentBlockIndex { get { return _currentBlockIndex; } }
+    private GameObject _sampleBlock;
+
+    private void Start()
+    {
+        ReplaceSampleBlock();
+    }
 
     public void ChangeBlockIndex(bool increment)
     {
         _currentBlockIndex += increment ? 1 : -1;
         _currentBlockIndex = Mathf.Clamp(_currentBlockIndex, 0, _blockPrefabs.Length - 1);
+        ReplaceSampleBlock();
+    }
+    private void ReplaceSampleBlock()
+    {
+        if (_sampleBlock != null)
+        {
+            Destroy(_sampleBlock);
+        }
+        _sampleBlock = Instantiate(_blockPrefabs[_currentBlockIndex], _sample);
+        _sampleBlock.transform.localPosition = Vector3.zero;
+        _sampleBlock.transform.localRotation = Quaternion.identity;
     }
 
     public void SendMasterBlocks(Photon.Realtime.Player newPlayer)
