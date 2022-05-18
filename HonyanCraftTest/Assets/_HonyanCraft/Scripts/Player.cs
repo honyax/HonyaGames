@@ -5,12 +5,14 @@ using Photon.Pun;
 public class Player : MonoBehaviourPun
 {
     private Transform _cachedTransform;
+    private Transform _cachedMainCameraTransform;
     private Transform _blockPosition;
     private GameObject _block;
 
     private void Start()
     {
         _cachedTransform = transform;
+        _cachedMainCameraTransform = Camera.main.transform;
         _blockPosition = _cachedTransform.Find("BlockPosition");
         _block = _blockPosition.Find("Cell2").gameObject;
         var mat = _block.GetComponent<MeshRenderer>().material;
@@ -26,7 +28,7 @@ public class Player : MonoBehaviourPun
             return;
 
         var pos = _cachedTransform.position;
-        pos += _cachedTransform.forward;
+        pos += _cachedMainCameraTransform.forward;
         var blockPos = Vector3Int.CeilToInt(pos);
         _blockPosition.position = blockPos;
         _blockPosition.rotation = Quaternion.identity;
