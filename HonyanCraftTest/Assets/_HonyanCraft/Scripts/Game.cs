@@ -12,6 +12,12 @@ public class Game : SingletonMonoBehaviour<Game>
     private Transform _sample;
 
     [SerializeField]
+    private ParticleSystem _createBlockEffectPrefab;
+
+    [SerializeField]
+    private ParticleSystem _deleteBlockEffectPrefab;
+
+    [SerializeField]
     private GameObject[] _blockPrefabs;
 
     private Dictionary<Vector3Int, int> _masterBlockDict = new Dictionary<Vector3Int, int>();
@@ -81,10 +87,12 @@ public class Game : SingletonMonoBehaviour<Game>
     public void CreateBlockExec(Vector3Int pos, int blockId)
     {
         var blockObj = Instantiate(_blockPrefabs[blockId], Vector3.zero, Quaternion.identity);
-        blockObj.transform.position = new Vector3(pos.x, pos.y, pos.z);
+        var blockPos = new Vector3(pos.x, pos.y, pos.z);
+        blockObj.transform.position = blockPos;
         _blockDict.Add(pos, blockObj);
-
         _masterBlockDict.TryAdd(pos, blockId);
+
+        Instantiate(_createBlockEffectPrefab, blockPos, Quaternion.identity);
     }
 
     public void TryDeleteBlock(Vector3Int pos)
@@ -100,8 +108,12 @@ public class Game : SingletonMonoBehaviour<Game>
     {
         if (_blockDict.TryGetValue(pos, out var go))
         {
+            var blockPos = go.transform.position;
             Destroy(go);
             _blockDict.Remove(pos);
+            _masterBlockDict.Remove(pos);
+
+            Instantiate(_deleteBlockEffectPrefab, blockPos, Quaternion.identity);
         }
     }
 }

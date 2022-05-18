@@ -333,6 +333,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerPrefab: {fileID: 4701364884260132895, guid: 743d1e3099e1f104c8c0094932597ad9, type: 3}
   _sample: {fileID: 586429755}
+  _createBlockEffectPrefab: {fileID: 19800018, guid: 2b3131550c2d9f140acf1cbc46a800f1, type: 3}
+  _deleteBlockEffectPrefab: {fileID: 198499209413112314, guid: 73324eb67c613724aabe6b5704b0c616, type: 3}
   _blockPrefabs:
   - {fileID: 1945324685033056, guid: 8577e7e3959a6fb489ab025970d774ae, type: 3}
   - {fileID: 1249173009392436, guid: b8ced816f1c50864c9a89b8f901e5138, type: 3}
@@ -795,7 +797,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.1410255, y: 1}
+    m_SensorSize: {x: 2.2033665, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
