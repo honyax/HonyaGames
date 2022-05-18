@@ -18,6 +18,15 @@ public class Game : SingletonMonoBehaviour<Game>
     private ParticleSystem _deleteBlockEffectPrefab;
 
     [SerializeField]
+    private AudioSource _seAudioSource;
+
+    [SerializeField]
+    private AudioClip _createBlockSe;
+
+    [SerializeField]
+    private AudioClip _deleteBlockSe;
+
+    [SerializeField]
     private GameObject[] _blockPrefabs;
 
     private Dictionary<Vector3Int, int> _masterBlockDict = new Dictionary<Vector3Int, int>();
@@ -93,6 +102,7 @@ public class Game : SingletonMonoBehaviour<Game>
         _masterBlockDict.TryAdd(pos, blockId);
 
         Instantiate(_createBlockEffectPrefab, blockPos, Quaternion.identity);
+        _seAudioSource.PlayOneShot(_createBlockSe);
     }
 
     public void TryDeleteBlock(Vector3Int pos)
@@ -114,6 +124,7 @@ public class Game : SingletonMonoBehaviour<Game>
             _masterBlockDict.Remove(pos);
 
             Instantiate(_deleteBlockEffectPrefab, blockPos, Quaternion.identity);
+            _seAudioSource.PlayOneShot(_deleteBlockSe);
         }
     }
 }
