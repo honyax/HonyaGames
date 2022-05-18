@@ -8722,6 +8722,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cell2
       objectReference: {fileID: 0}
+    - target: {fileID: 1770014512445084, guid: 92b72f9119aa0fd47b17116870ede491, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4831432386883038, guid: 92b72f9119aa0fd47b17116870ede491, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -8766,7 +8770,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 65030784112534200, guid: 92b72f9119aa0fd47b17116870ede491, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 92b72f9119aa0fd47b17116870ede491, type: 3}
 --- !u!4 &7693146813743876263 stripped
 Transform:

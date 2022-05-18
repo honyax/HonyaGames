@@ -26,6 +26,7 @@ public class Player : MonoBehaviourPun
             return;
 
         var pos = _cachedTransform.position;
+        pos += _cachedTransform.forward;
         var blockPos = Vector3Int.CeilToInt(pos);
         _blockPosition.position = blockPos;
         _blockPosition.rotation = Quaternion.identity;
