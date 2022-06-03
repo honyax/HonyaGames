@@ -26,7 +26,13 @@ public class Game : MonoBehaviour
                 t.localRotation = Quaternion.identity;
                 t.localScale = Vector3.one;
                 _stones[z][x] = stone;
+                stone.SetActive(false, Stone.Color.Black);
             }
         }
+
+        _stones[3][3].SetActive(true, Stone.Color.Black);
+        _stones[3][4].SetActive(true, Stone.Color.White);
+        _stones[4][3].SetActive(true, Stone.Color.White);
+        _stones[4][4].SetActive(true, Stone.Color.Black);
     }
 }
