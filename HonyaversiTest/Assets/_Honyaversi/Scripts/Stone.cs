@@ -18,15 +18,15 @@ public class Stone : MonoBehaviour
         Fix,
     }
 
-    private Color _color = Color.Black;
-    private State _state = State.None;
+    public Color CurrentColor { get; private set; } = Color.Black;
+    public State CurrentState { get; private set; } = State.None;
 
     public void SetActive(bool value, Color color)
     {
         if (value)
         {
-            this._color = color;
-            this._state = State.Fix;
+            this.CurrentColor = color;
+            this.CurrentState = State.Fix;
 
             switch (color)
             {
@@ -40,9 +40,29 @@ public class Stone : MonoBehaviour
         }
         else
         {
-            this._state = State.None;
+            this.CurrentState = State.None;
         }
 
         gameObject.SetActive(value);
+    }
+
+    public void Reverse()
+    {
+        if (CurrentState == State.None)
+        {
+            Debug.LogError("Invalid Stone State");
+            return;
+        }
+
+        switch (CurrentColor)
+        {
+            case Color.Black:
+                CurrentColor = Color.White;
+                break;
+            case Color.White:
+                CurrentColor = Color.Black;
+                break;
+        }
+        CurrentState = State.Fix;
     }
 }
