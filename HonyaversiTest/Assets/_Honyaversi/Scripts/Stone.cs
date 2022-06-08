@@ -18,6 +18,15 @@ public class Stone : MonoBehaviour
         Fix,
     }
 
+    [SerializeField]
+    private GameObject _black;
+
+    [SerializeField]
+    private GameObject _white;
+
+    [SerializeField]
+    private GameObject _dot;
+
     public Color CurrentColor { get; private set; } = Color.Black;
     public State CurrentState { get; private set; } = State.None;
 
@@ -27,6 +36,9 @@ public class Stone : MonoBehaviour
         {
             this.CurrentColor = color;
             this.CurrentState = State.Fix;
+            this._black.SetActive(true);
+            this._white.SetActive(true);
+            this._dot.SetActive(false);
 
             switch (color)
             {
@@ -44,6 +56,14 @@ public class Stone : MonoBehaviour
         }
 
         gameObject.SetActive(value);
+    }
+
+    public void EnableDot()
+    {
+        this._black.SetActive(false);
+        this._white.SetActive(false);
+        this._dot.SetActive(true);
+        gameObject.SetActive(true);
     }
 
     public void Reverse()

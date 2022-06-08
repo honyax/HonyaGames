@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Game : MonoBehaviour
+public class Game : SingletonMonoBehaviour<Game>
 {
     const int XNUM = 8;
     const int ZNUM = 8;
@@ -22,9 +22,32 @@ public class Game : MonoBehaviour
     [SerializeField]
     private Transform _stoneBase;
 
+    [SerializeField]
+    private SelfPlayer _selfPlayer;
+
+    [SerializeField]
+    private EnemyPlayer _enemyPlayer;
+
     public State CurrentState { get; private set; } = State.None;
 
+    public int CurrentTurn {
+        get
+        {
+            var turnCount = 0;
+            for (var z = 0; z < ZNUM; z++)
+            {
+                for (var x = 0; x < XNUM; x++)
+                {
+                    if (_stones[z][x].CurrentState != Stone.State.None)
+                        turnCount++;
+                }
+            }
+            return turnCount;
+        }
+    }
+
     private Stone[][] _stones;
+    public Stone[][] Stones { get { return _stones; } }
 
     private void Start()
     {
@@ -69,7 +92,7 @@ public class Game : MonoBehaviour
 
             case State.BlackTurn:
                 {
-                    if (TryGetSelected(out var x, out var z))
+                    if (_selfPlayer.TryGetSelected(out var x, out var z))
                     {
                         _stones[z][x].SetActive(true, Stone.Color.Black);
                         Reverse(Stone.Color.Black, x, z);
@@ -86,7 +109,7 @@ public class Game : MonoBehaviour
                 break;
             case State.WhiteTurn:
                 {
-                    if (TryGetSelected(out var x, out var z))
+                    if (_enemyPlayer.TryGetSelected(out var x, out var z))
                     {
                         _stones[z][x].SetActive(true, Stone.Color.White);
                         Reverse(Stone.Color.White, x, z);
@@ -109,14 +132,6 @@ public class Game : MonoBehaviour
             default:
                 break;
         }
-    }
-
-    private bool TryGetSelected(out int x, out int z)
-    {
-        // TODO
-        x = 0;
-        z = 0;
-        return false;
     }
 
     private void Reverse(Stone.Color color, int putX, int putZ)
