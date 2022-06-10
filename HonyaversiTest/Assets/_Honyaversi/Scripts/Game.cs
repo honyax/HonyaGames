@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using TMPro;
 
 public class Game : SingletonMonoBehaviour<Game>
 {
@@ -28,6 +30,12 @@ public class Game : SingletonMonoBehaviour<Game>
 
     [SerializeField]
     private GameObject _cursor;
+
+    [SerializeField]
+    private TextMeshPro _blackScoreText;
+
+    [SerializeField]
+    private TextMeshPro _whiteScoreText;
 
     public State CurrentState { get; private set; } = State.None;
 
@@ -90,6 +98,7 @@ public class Game : SingletonMonoBehaviour<Game>
                 _stones[3][4].SetActive(true, Stone.Color.White);
                 _stones[4][3].SetActive(true, Stone.Color.White);
                 _stones[4][4].SetActive(true, Stone.Color.Black);
+                UpdateScore();
 
                 CurrentState = State.BlackTurn;
                 break;
@@ -100,6 +109,7 @@ public class Game : SingletonMonoBehaviour<Game>
                     {
                         _stones[z][x].SetActive(true, Stone.Color.Black);
                         Reverse(Stone.Color.Black, x, z);
+                        UpdateScore();
                         if (IsGameFinished())
                         {
                             CurrentState = State.Result;
@@ -124,6 +134,7 @@ public class Game : SingletonMonoBehaviour<Game>
                     {
                         _stones[z][x].SetActive(true, Stone.Color.White);
                         Reverse(Stone.Color.White, x, z);
+                        UpdateScore();
                         if (IsGameFinished())
                         {
                             CurrentState = State.Result;
@@ -144,12 +155,46 @@ public class Game : SingletonMonoBehaviour<Game>
                 break;
 
             case State.Result:
+                {
+                    var kb = Keyboard.current;
+                    if (kb.enterKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame)
+                    {
+                        CurrentState = State.Initializing;
+                    }
+                }
                 break;
 
             case State.None:
             default:
                 break;
         }
+    }
+
+    private void UpdateScore()
+    {
+        var blackScore = 0;
+        var whiteScore = 0;
+        for (var z = 0; z < ZNUM; z++)
+        {
+            for (var x = 0; x < XNUM; x++)
+            {
+                if (_stones[z][x].CurrentState != Stone.State.None)
+                {
+                    switch (_stones[z][x].CurrentColor)
+                    {
+                        case Stone.Color.Black:
+                            blackScore++;
+                            break;
+                        case Stone.Color.White:
+                            whiteScore++;
+                            break;
+                    }
+                }
+            }
+        }
+
+        _blackScoreText.text = blackScore.ToString();
+        _whiteScoreText.text = whiteScore.ToString();
     }
 
     private void Reverse(Stone.Color color, int putX, int putZ)
