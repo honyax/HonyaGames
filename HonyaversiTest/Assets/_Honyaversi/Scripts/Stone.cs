@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Stone : MonoBehaviour
@@ -78,9 +76,11 @@ public class Stone : MonoBehaviour
         {
             case Color.Black:
                 CurrentColor = Color.White;
+                transform.localRotation = Quaternion.Euler(0, 0, 180);
                 break;
             case Color.White:
                 CurrentColor = Color.Black;
+                transform.localRotation = Quaternion.Euler(0, 0, 0);
                 break;
         }
         CurrentState = State.Fix;

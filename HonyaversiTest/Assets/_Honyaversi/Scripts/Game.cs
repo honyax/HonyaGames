@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Game : SingletonMonoBehaviour<Game>
 {
-    const int XNUM = 8;
-    const int ZNUM = 8;
+    public const int XNUM = 8;
+    public const int ZNUM = 8;
 
     public enum State
     {
@@ -28,7 +26,12 @@ public class Game : SingletonMonoBehaviour<Game>
     [SerializeField]
     private EnemyPlayer _enemyPlayer;
 
+    [SerializeField]
+    private GameObject _cursor;
+
     public State CurrentState { get; private set; } = State.None;
+
+    public GameObject Cursor { get { return _cursor; } }
 
     public int CurrentTurn {
         get
@@ -66,6 +69,7 @@ public class Game : SingletonMonoBehaviour<Game>
             }
         }
 
+        _cursor.SetActive(false);
         CurrentState = State.Initializing;
     }
 
@@ -102,7 +106,14 @@ public class Game : SingletonMonoBehaviour<Game>
                         }
                         else
                         {
-                            CurrentState = State.WhiteTurn;
+                            if (_enemyPlayer.CanPut())
+                            {
+                                CurrentState = State.WhiteTurn;
+                            }
+                            else if (!_selfPlayer.CanPut())
+                            {
+                                CurrentState = State.Result;
+                            }
                         }
                     }
                 }
@@ -119,7 +130,14 @@ public class Game : SingletonMonoBehaviour<Game>
                         }
                         else
                         {
-                            CurrentState = State.BlackTurn;
+                            if (_selfPlayer.CanPut())
+                            {
+                                CurrentState = State.BlackTurn;
+                            }
+                            else if (!_enemyPlayer.CanPut())
+                            {
+                                CurrentState = State.Result;
+                            }
                         }
                     }
                 }
@@ -140,44 +158,65 @@ public class Game : SingletonMonoBehaviour<Game>
         {
             for (var dirX = -1; dirX <= 1; dirX++)
             {
-                int x = putX;
-                int z = putZ;
-                var reverseCount = 0;
-                for (var i = 0; i < 8; i++)
-                {
-                    x += dirX;
-                    z += dirZ;
-                    if (x < 0 || XNUM <= x || z < 0 || ZNUM <= z)
-                    {
-                        reverseCount = 0;
-                        break;
-                    }
+                var reverseCount = CalcReverseCount(color, putX, putZ, dirX, dirZ);
 
-                    var stone = _stones[z][x];
-                    if (stone.CurrentState == Stone.State.None)
-                    {
-                        reverseCount = 0;
-                        break;
-                    }
-                    else
-                    {
-                        if (stone.CurrentColor != color)
-                        {
-                            reverseCount++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                for (var i = 0; i < reverseCount; i++)
+                for (var i = 1; i <= reverseCount; i++)
                 {
                     _stones[putZ + dirZ * i][putX + dirX * i].Reverse();
                 }
             }
         }
+    }
+
+    private int CalcReverseCount(Stone.Color color, int putX, int putZ, int dirX, int dirZ)
+    {
+        var x = putX;
+        var z = putZ;
+        var reverseCount = 0;
+        for (var i = 0; i < 8; i++)
+        {
+            x += dirX;
+            z += dirZ;
+            if (x < 0 || XNUM <= x || z < 0 || ZNUM <= z)
+            {
+                reverseCount = 0;
+                break;
+            }
+
+            var stone = _stones[z][x];
+            if (stone.CurrentState == Stone.State.None)
+            {
+                reverseCount = 0;
+                break;
+            }
+            else
+            {
+                if (stone.CurrentColor != color)
+                {
+                    reverseCount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        return reverseCount;
+    }
+
+    public int CalcTotalReverseCount(Stone.Color color, int putX, int putZ)
+    {
+        var totalReverseCount = 0;
+        for (var dirZ = -1; dirZ <= 1; dirZ++)
+        {
+            for (var dirX = -1; dirX <= 1; dirX++)
+            {
+                totalReverseCount += CalcReverseCount(color, putX, putZ, dirX, dirZ);
+            }
+        }
+
+        return totalReverseCount;
     }
 
     private bool IsGameFinished()
