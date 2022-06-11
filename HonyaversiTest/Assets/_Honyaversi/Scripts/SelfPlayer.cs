@@ -61,33 +61,20 @@ public class SelfPlayer : BasePlayer
         var keyboard = Keyboard.current;
         if (keyboard.leftArrowKey.wasPressedThisFrame || keyboard.aKey.wasPressedThisFrame)
         {
-            if (_cursorPos.x > 0)
-            {
-                _cursorPos.x--;
-            }
+            TryCursorMove(-1, 0);
         }
         else if (keyboard.upArrowKey.wasPressedThisFrame || keyboard.wKey.wasPressedThisFrame)
         {
-            if (_cursorPos.z < (Game.ZNUM - 1))
-            {
-                _cursorPos.z++;
-            }
+            TryCursorMove(0, 1);
         }
         else if (keyboard.rightArrowKey.wasPressedThisFrame || keyboard.dKey.wasPressedThisFrame)
         {
-            if (_cursorPos.x < (Game.XNUM - 1))
-            {
-                _cursorPos.x++;
-            }
+            TryCursorMove(1, 0);
         }
         else if (keyboard.downArrowKey.wasPressedThisFrame || keyboard.sKey.wasPressedThisFrame)
         {
-            if (_cursorPos.z > 0)
-            {
-                _cursorPos.z--;
-            }
+            TryCursorMove(0, -1);
         }
-        _cachedCursorTransform.localPosition = _cursorPos * 10;
 
         if (keyboard.enterKey.wasPressedThisFrame || keyboard.spaceKey.wasPressedThisFrame)
         {
@@ -98,6 +85,24 @@ public class SelfPlayer : BasePlayer
                 HideDots();
             }
         }
+    }
+
+    private bool TryCursorMove(int deltaX, int deltaZ)
+    {
+        var x = _cursorPos.x;
+        var z = _cursorPos.z;
+        x += deltaX;
+        z += deltaZ;
+        if (x < 0 || Game.XNUM <= x)
+            return false;
+        if (z < 0 || Game.ZNUM <= z)
+            return false;
+
+        _cursorPos.x = x;
+        _cursorPos.z = z;
+        _cachedCursorTransform.localPosition = _cursorPos * 10;
+        Game.Instance.PlayCursorMoveSe();
+        return true;
     }
 
     private void ShowDots()

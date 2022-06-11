@@ -45,6 +45,7 @@ public class Stone : MonoBehaviour
             this._white.SetActive(true);
             this._dot.SetActive(false);
             this._stateChangedAt = DateTime.UtcNow;
+            Game.Instance.PlayStoneAppearSe();
 
             switch (color)
             {
@@ -93,6 +94,7 @@ public class Stone : MonoBehaviour
         }
         this.CurrentState = State.Reversing;
         this._stateChangedAt = DateTime.UtcNow;
+        Game.Instance.PlayStoneReverseSe();
     }
 
     private void Update()

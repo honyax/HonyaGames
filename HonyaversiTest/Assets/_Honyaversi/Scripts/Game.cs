@@ -40,6 +40,18 @@ public class Game : SingletonMonoBehaviour<Game>
     [SerializeField]
     private TextMeshPro _resultText;
 
+    [SerializeField]
+    private AudioSource _seAudioSource;
+
+    [SerializeField]
+    private AudioClip _cursorMoveSe;
+
+    [SerializeField]
+    private AudioClip _stoneAppearSe;
+
+    [SerializeField]
+    private AudioClip _stoneReverseSe;
+
     public State CurrentState { get; private set; } = State.None;
 
     public GameObject Cursor { get { return _cursor; } }
@@ -328,5 +340,20 @@ public class Game : SingletonMonoBehaviour<Game>
             }
         }
         return false;
+    }
+
+    public void PlayCursorMoveSe()
+    {
+        _seAudioSource.PlayOneShot(_cursorMoveSe);
+    }
+
+    public void PlayStoneAppearSe()
+    {
+        _seAudioSource.PlayOneShot(_stoneAppearSe);
+    }
+
+    public void PlayStoneReverseSe()
+    {
+        _seAudioSource.PlayOneShot(_stoneReverseSe);
     }
 }
