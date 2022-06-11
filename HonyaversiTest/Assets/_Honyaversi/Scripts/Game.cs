@@ -4,8 +4,8 @@ using TMPro;
 
 public class Game : SingletonMonoBehaviour<Game>
 {
-    public const int XNUM = 8;
-    public const int ZNUM = 8;
+    public static readonly int XNUM = 8;
+    public static readonly int ZNUM = 8;
 
     public enum State
     {
@@ -36,6 +36,9 @@ public class Game : SingletonMonoBehaviour<Game>
 
     [SerializeField]
     private TextMeshPro _whiteScoreText;
+
+    [SerializeField]
+    private TextMeshPro _resultText;
 
     public State CurrentState { get; private set; } = State.None;
 
@@ -77,7 +80,6 @@ public class Game : SingletonMonoBehaviour<Game>
             }
         }
 
-        _cursor.SetActive(false);
         CurrentState = State.Initializing;
     }
 
@@ -99,12 +101,18 @@ public class Game : SingletonMonoBehaviour<Game>
                 _stones[4][3].SetActive(true, Stone.Color.White);
                 _stones[4][4].SetActive(true, Stone.Color.Black);
                 UpdateScore();
+                _resultText.gameObject.SetActive(false);
+                _cursor.SetActive(false);
 
                 CurrentState = State.BlackTurn;
                 break;
 
             case State.BlackTurn:
                 {
+                    if (IsAnimating())
+                    {
+                        break;
+                    }
                     if (_selfPlayer.TryGetSelected(out var x, out var z))
                     {
                         _stones[z][x].SetActive(true, Stone.Color.Black);
@@ -130,6 +138,10 @@ public class Game : SingletonMonoBehaviour<Game>
                 break;
             case State.WhiteTurn:
                 {
+                    if (IsAnimating())
+                    {
+                        break;
+                    }
                     if (_enemyPlayer.TryGetSelected(out var x, out var z))
                     {
                         _stones[z][x].SetActive(true, Stone.Color.White);
@@ -156,6 +168,17 @@ public class Game : SingletonMonoBehaviour<Game>
 
             case State.Result:
                 {
+                    if (!_resultText.gameObject.activeSelf)
+                    {
+                        int blackScore;
+                        int whiteScore;
+                        CalcScore(out blackScore, out whiteScore);
+                        _resultText.text = blackScore > whiteScore ? "You Win"
+                            : blackScore < whiteScore ? "You Lose"
+                            : "Draw";
+                        _resultText.gameObject.SetActive(true);
+                    }
+
                     var kb = Keyboard.current;
                     if (kb.enterKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame)
                     {
@@ -172,8 +195,18 @@ public class Game : SingletonMonoBehaviour<Game>
 
     private void UpdateScore()
     {
-        var blackScore = 0;
-        var whiteScore = 0;
+        int blackScore;
+        int whiteScore;
+        CalcScore(out blackScore, out whiteScore);
+        _blackScoreText.text = blackScore.ToString();
+        _whiteScoreText.text = whiteScore.ToString();
+    }
+
+    private void CalcScore(out int blackScore, out int whiteScore)
+    {
+        blackScore = 0;
+        whiteScore = 0;
+
         for (var z = 0; z < ZNUM; z++)
         {
             for (var x = 0; x < XNUM; x++)
@@ -192,9 +225,6 @@ public class Game : SingletonMonoBehaviour<Game>
                 }
             }
         }
-
-        _blackScoreText.text = blackScore.ToString();
-        _whiteScoreText.text = whiteScore.ToString();
     }
 
     private void Reverse(Stone.Color color, int putX, int putZ)
@@ -252,6 +282,9 @@ public class Game : SingletonMonoBehaviour<Game>
 
     public int CalcTotalReverseCount(Stone.Color color, int putX, int putZ)
     {
+        if (_stones[putZ][putX].CurrentState != Stone.State.None)
+            return 0;
+
         var totalReverseCount = 0;
         for (var dirZ = -1; dirZ <= 1; dirZ++)
         {
@@ -278,5 +311,22 @@ public class Game : SingletonMonoBehaviour<Game>
         }
 
         return true;
+    }
+
+    private bool IsAnimating()
+    {
+        for (var z = 0; z < Game.ZNUM; z++)
+        {
+            for (var x = 0; x < Game.XNUM; x++)
+            {
+                switch (_stones[z][x].CurrentState)
+                {
+                    case Stone.State.Appearing:
+                    case Stone.State.Reversing:
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 }
