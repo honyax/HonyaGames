@@ -1,7 +1,14 @@
 ■Honyagdoll
 
-☆０１：プロジェクト作成
-☆０２：地形作成、キャラアセットインポート
-☆０３：キャラアセットをラグドール化
-☆０４：クリック位置を爆発させて吹っ飛ばす
+★０１：プロジェクト作成
+★０２：地形作成、キャラアセットインポート
+　Floor materials pack, Input System
+　Real New York City Vol. 2
+　Global Roads & Traffic [Lite]
+　Starter Assets - Third Person Character Controller
+　NewYorkでTPキャラコン出した
+　└Tools - Starter Assets - Reset Third Person Controller Armature
+☆０３：ラグドール化する用のキャラアセットをインポート
+☆０４：キャラアセットをラグドール化
+☆０５：クリック位置を爆発させて吹っ飛ばす
 
