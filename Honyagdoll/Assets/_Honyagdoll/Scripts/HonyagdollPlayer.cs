@@ -23,7 +23,7 @@ public class HonyagdollPlayer : MonoBehaviour
 
     private float _explosionRadius = 100;
 
-    private float _upwardsModifier = 3;
+    private float _upwardsModifier = 5;
 
     private ForceMode _forceMode = ForceMode.Impulse;
 
