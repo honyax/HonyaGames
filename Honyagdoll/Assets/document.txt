@@ -18,4 +18,11 @@
 　HonyagdollPlayerスクリプトを作成
 　各RagdollのRigidbodyを参照
 　マウスクリックでRigidbodyにAddExplosion
-☆０５：クリック時に爆発のエフェクト＆SE
+★０５：クリック時に爆発のエフェクト
+　Magic Hit Effect（Auto Destruction追加）
+　└左クリック時に生成
+　右クリックでキャラをランダムにSpawn
+　Honyagdoll.csを作ってPrefabにアタッチ
+　Playerを中心（-640, 30, -640）に
+☆０６：スポーン時＆爆発時にSE
+
