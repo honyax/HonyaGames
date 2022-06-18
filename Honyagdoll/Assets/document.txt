@@ -8,7 +8,12 @@
 　Starter Assets - Third Person Character Controller
 　NewYorkでTPキャラコン出した
 　└Tools - Starter Assets - Reset Third Person Controller Armature
-☆０３：ラグドール化する用のキャラアセットをインポート
-☆０４：キャラアセットをラグドール化
+★０３：ラグドール化する用のキャラアセットをインポートし、ラグドール化
+　Robot Kyle
+　unity-chan!
+　Zombie
+　BzKovSoftインスコ
+　└上の３キャラPrefabを全てラグドール化
+☆０４：キャラを適当に爆発で吹っ飛ばしてみる
 ☆０５：クリック位置を爆発させて吹っ飛ばす
 
