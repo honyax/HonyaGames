@@ -14,6 +14,8 @@
 　Zombie
 　BzKovSoftインスコ
 　└上の３キャラPrefabを全てラグドール化
-☆０４：キャラを適当に爆発で吹っ飛ばしてみる
-☆０５：クリック位置を爆発させて吹っ飛ばす
-
+★０４：キャラを適当に爆発で吹っ飛ばしてみる
+　HonyagdollPlayerスクリプトを作成
+　各RagdollのRigidbodyを参照
+　マウスクリックでRigidbodyにAddExplosion
+☆０５：クリック時に爆発のエフェクト＆SE
