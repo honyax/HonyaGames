@@ -10,6 +10,15 @@ public class HonyagdollPlayer : MonoBehaviour
     [SerializeField]
     private ParticleSystem _explosionEffect;
 
+    [SerializeField]
+    private AudioSource _seAudioSource;
+
+    [SerializeField]
+    private AudioClip _spawnSe;
+
+    [SerializeField]
+    private AudioClip _explosionSe;
+
     private float _explosionForce = 1000;
 
     private float _explosionRadius = 100;
@@ -36,6 +45,7 @@ public class HonyagdollPlayer : MonoBehaviour
             {
                 honyagdoll.MainRigidbody.AddExplosionForce(_explosionForce, gameObject.transform.position, _explosionRadius, _upwardsModifier, _forceMode);
             }
+            _seAudioSource.PlayOneShot(_explosionSe);
         }
         else if (mouse.rightButton.wasReleasedThisFrame)
         {
@@ -45,6 +55,7 @@ public class HonyagdollPlayer : MonoBehaviour
             t.rotation = Quaternion.identity;
             t.localScale = Vector3.one;
             _honyagdolls.Add(honyagdoll);
+            _seAudioSource.PlayOneShot(_spawnSe);
         }
     }
 }
