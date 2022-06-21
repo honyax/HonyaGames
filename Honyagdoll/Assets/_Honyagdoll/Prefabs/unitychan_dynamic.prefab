@@ -8613,11 +8613,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7668109302065418218}
-  - component: {fileID: 7668109302072910146}
-  - component: {fileID: 7668109302071142216}
-  - component: {fileID: 7668109302071142218}
   - component: {fileID: 7668109302071142284}
-  - component: {fileID: 7668109302071142290}
   - component: {fileID: 7668109302071142288}
   - component: {fileID: 7668109302071142294}
   - component: {fileID: -1153760587497503631}
@@ -8646,73 +8642,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &7668109302072910146
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7668109302065648592}
-  m_Enabled: 0
-  m_Avatar: {fileID: 9000000, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
-  m_Controller: {fileID: 9100000, guid: 3173dc991e314594abd6180b45c49c92, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7668109302071142216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7668109302065648592}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 058a2736f2afd564eae55007a87eed87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _random: 0
-  _threshold: 0.5
-  _interval: 10
---- !u!114 &7668109302071142218
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7668109302065648592}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e658bfc1e524494b9e54a1c92d8c1e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animations:
-  - {fileID: 7400000, guid: 6394472d24c9347e5bb789ec1f15e5bb, type: 2}
-  - {fileID: 7400000, guid: 06b76ba9895174fc19d91c361e7c911b, type: 2}
-  - {fileID: 7400000, guid: 901d9b98ec9a64ade8f264b6e32c1341, type: 2}
-  - {fileID: 7400000, guid: 2d64a878e09fc46ce9d3079357ebb3a5, type: 2}
-  - {fileID: 7400000, guid: ff0ec808b24b748e482e13ebfc9305ad, type: 2}
-  - {fileID: 7400000, guid: 689da6f371ad8441395f39acaf2c7ae3, type: 2}
-  - {fileID: 7400000, guid: 66c6a39c175f346f6b2e3016fa5ae35b, type: 2}
-  - {fileID: 7400000, guid: fc07439899bf64b59b05471e3d59be6a, type: 2}
-  - {fileID: 7400000, guid: 4f32f4345ffde43aca2270c41dcf6e81, type: 2}
-  - {fileID: 7400000, guid: 73cb3ae8fc1de47a0a307cb5f95ec701, type: 2}
-  - {fileID: 7400000, guid: 3555863ff4ef948e298b8d11ea795ec4, type: 2}
-  - {fileID: 7400000, guid: a20620e3db1a64f2f9a3e3339b884479, type: 2}
-  - {fileID: 7400000, guid: aaf4f40e5f852472f9eb781bef3a2c17, type: 2}
-  - {fileID: 7400000, guid: 5da03c4c995e34f35a8c17702e9d6012, type: 2}
-  - {fileID: 7400000, guid: 69a5af149623d4592b3764b7cb6a7482, type: 2}
-  - {fileID: 7400000, guid: 63e3bd86527074923b9dc38ddb715245, type: 2}
-  - {fileID: 7400000, guid: 8564dc45968774e70ad835503fda627e, type: 2}
-  delayWeight: 0.3
-  isKeepFace: 0
 --- !u!114 &7668109302071142284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8817,21 +8746,6 @@ MonoBehaviour:
   - {fileID: 7668109302071142282}
   - {fileID: 7668109302071142232}
   - {fileID: 7668109302071142246}
---- !u!114 &7668109302071142290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7668109302065648592}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16931e3bbabb00f478bbbe4759af8343, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetObj: {fileID: 0}
-  isIkActive: 0
-  mixWeight: 1
 --- !u!114 &7668109302071142288
 MonoBehaviour:
   m_ObjectHideFlags: 0

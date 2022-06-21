@@ -1535,7 +1535,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 976482188021368578}
-  - component: {fileID: 7135719009673423480}
   - component: {fileID: 3629292387647912742}
   m_Layer: 0
   m_Name: Robot Kyle
@@ -1561,26 +1560,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &7135719009673423480
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4311757631868138769}
-  m_Enabled: 0
-  m_Avatar: {fileID: 9000000, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &3629292387647912742
 MonoBehaviour:
   m_ObjectHideFlags: 0
