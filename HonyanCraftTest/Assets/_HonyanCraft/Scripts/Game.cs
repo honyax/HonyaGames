@@ -37,22 +37,40 @@ public class Game : SingletonMonoBehaviour<Game>
 
     private void Start()
     {
-        ReplaceSampleBlock();
+        ReplaceSampleBlock(_currentBlockIndex);
     }
 
-    public void ChangeBlockIndex(bool increment)
+    /// <summary>
+    /// ブロックのインデックスを一つ減らす
+    /// </summary>
+    public void DecrementBlockIndex()
     {
-        _currentBlockIndex += increment ? 1 : -1;
-        _currentBlockIndex = Mathf.Clamp(_currentBlockIndex, 0, _blockPrefabs.Length - 1);
-        ReplaceSampleBlock();
+        if (_currentBlockIndex > 0)
+        {
+            _currentBlockIndex--;
+            ReplaceSampleBlock(_currentBlockIndex);
+        }
     }
-    private void ReplaceSampleBlock()
+
+    /// <summary>
+    /// ブロックのインデックスを一つ増やす
+    /// </summary>
+    public void IncrementBlockIndex()
+    {
+        if (_currentBlockIndex < _blockPrefabs.Length - 1)
+        {
+            _currentBlockIndex++;
+            ReplaceSampleBlock(_currentBlockIndex);
+        }
+    }
+
+    private void ReplaceSampleBlock(int blockIndex)
     {
         if (_sampleBlock != null)
         {
             Destroy(_sampleBlock);
         }
-        _sampleBlock = Instantiate(_blockPrefabs[_currentBlockIndex], _sample);
+        _sampleBlock = Instantiate(_blockPrefabs[blockIndex], _sample);
         _sampleBlock.transform.localPosition = Vector3.zero;
         _sampleBlock.transform.localRotation = Quaternion.identity;
     }

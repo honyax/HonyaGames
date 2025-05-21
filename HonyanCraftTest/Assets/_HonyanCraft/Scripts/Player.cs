@@ -45,11 +45,11 @@ public class Player : MonoBehaviourPun
         }
         else if (Keyboard.current.xKey.wasPressedThisFrame)
         {
-            Game.Instance.ChangeBlockIndex(true);
+            Game.Instance.IncrementBlockIndex();
         }
         else if (Keyboard.current.zKey.wasPressedThisFrame)
         {
-            Game.Instance.ChangeBlockIndex(false);
+            Game.Instance.DecrementBlockIndex();
         }
         else if (Keyboard.current.cKey.wasPressedThisFrame)
         {
